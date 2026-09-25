@@ -1,6 +1,7 @@
 import React from "react";
 import Logo from "../assets/logo.png";
 import Image from "next/image";
+import Link from "next/link";
 
 const Navbar = () => {
   return (
@@ -23,23 +24,24 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <div className="mx-auto hidden items-center gap-2 md:flex">
-          <a
-            href="#workouts"
+         
+          <Link href='/listed-card'
             className="rounded-full bg-[#243500] px-5 py-2 text-sm font-medium text-[#baff00]"
           >
             Workouts
-          </a>
+          
+         </Link>
 
-          <a
-            href="#plan"
+          <Link href="/listed-card"
             className="rounded-full px-5 py-2 text-sm text-gray-400 transition hover:text-white"
           >
             My Plan
-          </a>
+          </Link>
         </div>
 
         {/* Right Side */}
         <div className="hidden items-center gap-5 text-sm md:flex">
+         
           <div className="flex items-center gap-2 text-gray-400">
             <span>Plan</span>
 
@@ -47,6 +49,7 @@ const Navbar = () => {
               0
             </span>
           </div>
+         
 
           <div className="flex items-center gap-2 text-gray-400">
             <span>Saved</span>

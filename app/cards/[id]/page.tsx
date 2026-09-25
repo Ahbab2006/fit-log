@@ -1,3 +1,5 @@
+import Myplan from '@/app/components/cardDetails/myplan';
+import TodayBtn from '@/app/components/cardDetails/TodayBtn';
 import { ICard } from '@/app/types/card';
 import Image from 'next/image';
 import React from 'react';
@@ -189,21 +191,9 @@ const CardDetailsPage = async ({ params }: ICardDetailsPageProps) => {
                     {/* ================= BUTTONS ================= */}
                     <div className="mt-7 flex flex-wrap gap-3">
 
-                        <button
-                            type="button"
-                            className="rounded-lg bg-lime-400 px-5 py-3 text-xs font-bold text-black transition hover:bg-lime-300"
-                        >
-                            <span className="mr-2 text-sm">⊞</span>
-                            Add to today&apos;s plan
-                        </button>
+                        <TodayBtn card={card}/>
 
-                        <button
-                            type="button"
-                            className="rounded-lg border border-white/10 bg-transparent px-5 py-3 text-xs font-medium text-gray-300 transition hover:bg-white/5"
-                        >
-                            <span className="mr-2">♡</span>
-                            Save for later
-                        </button>
+                       <Myplan card={card}/>
 
                     </div>
 
