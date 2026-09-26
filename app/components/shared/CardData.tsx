@@ -9,7 +9,6 @@ interface CardProps {
 
 const CardData = ({ card }: CardProps) => {
   return (
-    // ২. এখানে চেক করুন href={`/card/${card.id}`} দেওয়া আছে কিনা
     <Link 
       href={`/cards/${card.id}`} 
       className="group block overflow-hidden rounded-xl border border-white/10 bg-[#12141a] transition hover:border-[#baff00]/50"
@@ -24,7 +23,6 @@ const CardData = ({ card }: CardProps) => {
       </div>
 
       <div className="p-4">
-        {/* Muscle group */}
         <div className="flex flex-wrap gap-1.5 mb-2">
           {card.muscleGroups?.map((muscle) => (
             <span
@@ -36,7 +34,6 @@ const CardData = ({ card }: CardProps) => {
           ))}
         </div>
 
-        {/* Title */}
         <h3 className="text-base font-bold uppercase text-white group-hover:text-[#baff00] transition">
           {card.name}
         </h3>
@@ -45,7 +42,6 @@ const CardData = ({ card }: CardProps) => {
           {card.description}
         </p>
 
-        {/* Footer info */}
         <div className="mt-4 flex items-center justify-between border-t border-white/5 pt-3 text-xs text-gray-400">
           <span>{card.duration} min</span>
           <span>{card.caloriesBurned} kcal</span>

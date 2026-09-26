@@ -30,7 +30,7 @@ export default async function Home() {
       <Banner />
 
       <section id="library" className="mx-auto max-w-7xl px-6 md:px-8">
-        {/* Section Header */}
+    
         <div className="mb-8">
           <h2 className="text-xl font-black uppercase tracking-[0.2em] text-[#baff00] md:text-2xl">
             THE LIBRARY
@@ -40,7 +40,7 @@ export default async function Home() {
           </p>
         </div>
 
-        {/* Workout Cards Grid */}
+  
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {cards.map((card) => (
             <CardData key={card.id} card={card} />

@@ -4,11 +4,10 @@ import { ICard } from "@/app/types/card";
 import Image from "next/image";
 import React from "react";
 
-// API Fetch Function
 const getCards = async (): Promise<ICard[]> => {
   try {
     const response = await fetch("https://api.abcz.workers.dev/api/fitlog", {
-      cache: "no-store", // dynamic cache disabled
+      cache: "no-store", 
     });
     if (!response.ok) return [];
     const data = await response.json();
@@ -30,18 +29,15 @@ const CardDetailsPage = async ({
 }: {
   params: Promise<{ id: string }> | { id: string };
 }) => {
-  // Params resolve kora (Next.js 14 & 15 duto-tei kaj korbe)
   const resolvedParams = await params;
   const cardId = resolvedParams?.id;
 
   const cardsData = await getCards();
 
-  // Trim ebong String convert kore safe match
   const card = cardsData.find(
     (c) => String(c.id).trim() === String(cardId).trim()
   );
 
-  // Card na pele jeno crash/blank 404 na hoye message dekhay
   if (!card) {
     return (
       <div className="min-h-screen bg-[#0d0f12] p-10 text-center text-white">
@@ -55,8 +51,7 @@ const CardDetailsPage = async ({
     <main className="min-h-screen bg-[#0d0f12] px-4 py-8 text-white md:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-2">
-          
-          {/* IMAGE */}
+      
           <div className="relative aspect-square w-full overflow-hidden rounded-2xl border border-white/5 bg-[#151820]">
             <Image
               src={card.image}
@@ -68,7 +63,6 @@ const CardDetailsPage = async ({
             />
           </div>
 
-          {/* DETAILS CONTENT */}
           <div className="flex flex-col">
             <h1 className="text-3xl font-black uppercase tracking-tight text-white md:text-4xl">
               {card.name}
@@ -78,7 +72,6 @@ const CardDetailsPage = async ({
               {card.description}
             </p>
 
-            {/* MUSCLE GROUPS */}
             <div className="mt-3 flex flex-wrap gap-2">
               {card.muscleGroups?.map((muscle) => (
                 <span
@@ -90,7 +83,6 @@ const CardDetailsPage = async ({
               ))}
             </div>
 
-            {/* STATS TABLE */}
             <div className="mt-6 divide-y divide-white/5 rounded-xl border border-white/5 bg-[#14171f]">
               <div className="flex items-center justify-between px-4 py-2.5 text-xs">
                 <span className="font-semibold uppercase tracking-wider text-gray-400">Equipment</span>
@@ -122,7 +114,6 @@ const CardDetailsPage = async ({
               </div>
             </div>
 
-            {/* INSTRUCTIONS */}
             {card.instructions && card.instructions.length > 0 && (
               <div className="mt-6">
                 <h3 className="text-xs font-black uppercase tracking-wider text-white">Instructions</h3>
@@ -137,7 +128,6 @@ const CardDetailsPage = async ({
               </div>
             )}
 
-            {/* BUTTONS */}
             <div className="mt-7 flex flex-wrap gap-3">
               <TodayBtn card={card} />
               <Myplan card={card} />

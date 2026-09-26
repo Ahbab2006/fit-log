@@ -39,7 +39,7 @@ const CardDetailsPage = async ({ params }: ICardDetailsPageProps) => {
     <div className="min-h-screen bg-[#0b0c0f] px-4 py-10 text-white md:px-8">
       <div className="mx-auto w-full max-w-5xl rounded-2xl border border-white/10 bg-[#12141a] p-6 md:p-8">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[400px_minmax(0,1fr)]">
-          {/* IMAGE */}
+    
           <figure className="relative h-[400px] w-full overflow-hidden rounded-xl bg-black/40">
             <Image
               src={card.image}
@@ -51,7 +51,6 @@ const CardDetailsPage = async ({ params }: ICardDetailsPageProps) => {
             />
           </figure>
 
-          {/* CONTENT */}
           <div className="flex flex-col justify-between">
             <div>
               <h1 className="text-3xl font-black uppercase tracking-tight text-white">
@@ -73,7 +72,6 @@ const CardDetailsPage = async ({ params }: ICardDetailsPageProps) => {
                 {card.description}
               </p>
 
-              {/* STATS */}
               <div className="mt-6 rounded-xl border border-white/10 bg-[#171a22]">
                 {[
                   { label: "EQUIPMENT", val: card.equipment },
@@ -96,7 +94,6 @@ const CardDetailsPage = async ({ params }: ICardDetailsPageProps) => {
                 ))}
               </div>
 
-              {/* INSTRUCTIONS */}
               {card.instructions && (
                 <div className="mt-6">
                   <h2 className="mb-3 text-xs font-black uppercase tracking-wider text-gray-300">
@@ -116,7 +113,6 @@ const CardDetailsPage = async ({ params }: ICardDetailsPageProps) => {
               )}
             </div>
 
-            {/* BUTTONS */}
             <div className="mt-8 flex flex-wrap gap-3">
               <TodayBtn card={card} />
               <Myplan card={card} />

@@ -29,7 +29,6 @@ const ListedCardContent = () => {
 
   const currentRawList = activeTab === "today" ? todayPlan : myPlan;
 
-  // Total Calculations
   const totalExercises = currentRawList.length;
   const totalMinutes = currentRawList.reduce(
     (acc, item) => acc + (Number(item.duration) || 0),
@@ -40,7 +39,6 @@ const ListedCardContent = () => {
     0
   );
 
-  // Sorting
   const sortedList = useMemo(() => {
     const list = [...currentRawList];
 
@@ -62,7 +60,6 @@ const ListedCardContent = () => {
           MY PLAN
         </h1>
 
-        {/* ================= SUMMARY STATS ================= */}
         <div className="grid grid-cols-3 gap-3 rounded-2xl border border-white/5 bg-[#12141a] p-6 text-center">
           <div>
             <p className="text-3xl font-black text-[#baff00] md:text-4xl">
@@ -90,7 +87,6 @@ const ListedCardContent = () => {
           </div>
         </div>
 
-        {/* ================= TABS & SORT BY DROPDOWN ================= */}
         <div className="mt-8 flex flex-col gap-4 border-b border-white/10 pb-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex gap-2">
             <button
@@ -113,7 +109,6 @@ const ListedCardContent = () => {
             </button>
           </div>
 
-          {/* Sort By Dropdown */}
           <div className="flex items-center gap-2 self-end sm:self-auto">
             <span className="text-xs text-gray-400">Sort By</span>
             <select
@@ -128,7 +123,6 @@ const ListedCardContent = () => {
           </div>
         </div>
 
-        {/* ================= CARDS LIST ================= */}
         <div className="mt-6">
           {sortedList.length === 0 ? (
             <div className="flex flex-col items-center justify-center rounded-2xl border border-white/5 bg-[#12141a] py-20 text-center">
@@ -172,7 +166,7 @@ const ListedCardContent = () => {
                   </div>
 
                   <div className="flex items-center gap-3">
-                    {/* View Details Link with /cards/ */}
+                   
                     <Link
                       href={`/cards/${card.id}`}
                       className="rounded-lg bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-white transition hover:bg-white/20"
@@ -180,7 +174,7 @@ const ListedCardContent = () => {
                       View Details
                     </Link>
 
-                    {/* Remove Button */}
+                  
                     <button
                       onClick={() => {
                         if (activeTab === "today") {

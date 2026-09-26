@@ -36,7 +36,6 @@ export const CardProvider = ({ children }: { children: React.ReactNode }) => {
   const [myPlan, setMyPlan] = useState<ICard[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Add to today's plan
   const addToTodayPlan = (card: ICard) => {
     const exists = todayPlan.some((item) => String(item.id) === String(card.id));
     if (exists) return false;
@@ -48,7 +47,6 @@ export const CardProvider = ({ children }: { children: React.ReactNode }) => {
     setTodayPlan((prev) => prev.filter((item) => Number(item.id) !== Number(id)));
   };
 
-  // Add to saved/my plan
   const addToMyPlan = (card: ICard) => {
     const exists = myPlan.some((item) => String(item.id) === String(card.id));
     if (exists) return false;

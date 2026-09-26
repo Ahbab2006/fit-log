@@ -12,7 +12,7 @@ const Navbar = () => {
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0b0c0f]">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
-        {/* Logo */}
+
         <Link href="/" className="flex items-center gap-2">
           <Image src={Logo} width={34} height={34} alt="FitLog Logo" />
           <span className="text-lg font-black tracking-wide text-white">
@@ -20,7 +20,6 @@ const Navbar = () => {
           </span>
         </Link>
 
-        {/* Center Links */}
         <div className="hidden items-center gap-3 md:flex">
           <Link
             href="/"
@@ -36,9 +35,9 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Right Badges (Clickable with query parameter) */}
+
         <div className="flex items-center gap-4 text-sm">
-          {/* Plan Button */}
+
           <Link
             href="/listed-card?tab=today"
             className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-gray-300 transition hover:bg-white/5 hover:text-white"
@@ -49,7 +48,6 @@ const Navbar = () => {
             </span>
           </Link>
 
-          {/* Saved Button */}
           <Link
             href="/listed-card?tab=saved"
             className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-gray-300 transition hover:bg-white/5 hover:text-white"

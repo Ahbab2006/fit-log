@@ -9,7 +9,7 @@ const TodayBtn = ({ card }: { card: ICard }) => {
   const { todayPlan, addToTodayPlan } = useContext(CardContext);
 
   const handleTodayBtn = () => {
-    // Check jodi agei add kora thake
+   
     const alreadyExists = todayPlan.some((item) => String(item.id) === String(card.id));
 
     if (alreadyExists) {

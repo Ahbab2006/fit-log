@@ -4,8 +4,7 @@ const Footer = () => {
   return (
     <footer className="mt-auto border-t border-white/5 bg-[#0b0c0f] py-6 text-xs text-gray-500">
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 sm:flex-row">
-        
-        {/* Left: Logo with dumbbell icon */}
+
         <div className="flex items-center gap-2 font-black tracking-wider text-white">
           <svg
             viewBox="0 0 24 24"
@@ -27,7 +26,6 @@ const Footer = () => {
           <span className="uppercase">FITLOG</span>
         </div>
 
-        {/* Right: Copyright text */}
         <p className="text-gray-400">
           © 2026 FitLog — Workout Library. Train hard, log honest.
         </p>
