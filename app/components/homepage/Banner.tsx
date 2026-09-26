@@ -4,46 +4,52 @@ import Image from "next/image";
 
 const Banner = () => {
   return (
-    <section className="px-6 py-10">
-      <div className="mx-auto flex max-w-7xl items-center overflow-hidden rounded-2xl border border-white/10 bg-[#15171c]">
-
+    <section className="px-4 py-8 md:px-8">
+      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between rounded-3xl border border-white/5 bg-[#12141a] px-8 py-12 md:px-14 md:py-16 lg:flex-row">
+        
         {/* Left Content */}
-        <div className="w-full px-8 py-14 md:px-12 lg:w-2/3 lg:py-16">
-
-          {/* Small heading */}
-          <p className="mb-5 text-xs font-bold tracking-widest text-[#baff00]">
+        <div className="w-full lg:max-w-2xl">
+          {/* Subtitle */}
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-[#baff00]">
             WORKOUT LIBRARY
           </p>
 
-          {/* Main heading */}
-          <h1 className="max-w-2xl text-4xl font-black leading-[0.95] tracking-tight text-white sm:text-5xl lg:text-6xl">
-            TRAIN WITH INTENT. LOG
-            <br />
-            EVERY SET.
+          {/* Main Heading - Strictly 2 Lines */}
+          <h1 className="mt-4 font-black uppercase tracking-tight text-white text-3xl sm:text-4xl md:text-5xl lg:text-[56px] leading-[0.95]">
+            <span className="block whitespace-nowrap">TRAIN WITH INTENT. LOG</span>
+            <span className="block whitespace-nowrap">EVERY SET.</span>
           </h1>
 
           {/* Description */}
-          <p className="mt-6 max-w-xl text-sm leading-6 text-gray-400 sm:text-base">
+          <p className="mt-5 max-w-lg text-sm leading-relaxed text-gray-400">
             FitLog is a dark, no-nonsense gym companion: pick a lift, lock it
             into today&apos;s plan, and watch the week&apos;s work add up.
           </p>
 
           {/* Button */}
-          <button className="mt-7 rounded-md bg-[#baff00] px-6 py-3 text-xs font-black text-black transition hover:bg-[#c8ff33] hover:shadow-[0_0_25px_rgba(186,255,0,0.2)]">
-            BROWSE WORKOUTS
-          </button>
+          <div className="mt-7">
+            <button
+              type="button"
+              className="rounded-lg bg-[#baff00] px-6 py-3 text-xs font-black uppercase tracking-wider text-black transition-colors hover:bg-[#cbfb2d]"
+            >
+              BROWSE WORKOUTS
+            </button>
+          </div>
         </div>
 
         {/* Right Image */}
-        <div className="hidden h-full w-1/3 items-center justify-center lg:flex">
-          <Image
-            src={BannerImg}
-            width={400}
-            height={400}
-            alt="Workout illustration"
-            className="h-[330px] w-[330px] object-contain"
-          />
+        <div className="relative mt-8 flex w-full items-center justify-center lg:mt-0 lg:w-auto">
+          <div className="relative h-[280px] w-[280px] sm:h-[340px] sm:w-[340px] lg:h-[380px] lg:w-[380px]">
+            <Image
+              src={BannerImg}
+              alt="Workout Machine"
+              fill
+              priority
+              className="object-contain"
+            />
+          </div>
         </div>
+
       </div>
     </section>
   );

@@ -6,14 +6,20 @@ import React, { useContext } from 'react';
 import { toast } from 'react-toastify';
 
 const Myplan = ({ card }: { card: ICard }) => {
-  const { addToMyPlan } = useContext(CardContext);
+  const { myPlan, addToMyPlan } = useContext(CardContext);
 
   const handleMyPlanBtn = () => {
-    const isAdded = addToMyPlan(card);
-    if (isAdded) {
+    // Check jodi agei save kora thake
+    const alreadyExists = myPlan.some((item) => String(item.id) === String(card.id));
+
+    if (alreadyExists) {
+      toast.warn(`"${card.name}" is already saved!`);
+      return;
+    }
+
+    const added = addToMyPlan(card);
+    if (added) {
       toast.success(`"${card.name}" saved for later!`);
-    } else {
-      toast.info(`"${card.name}" is already saved!`);
     }
   };
 
