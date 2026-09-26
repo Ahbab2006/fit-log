@@ -3,30 +3,43 @@
 import { CardContext } from '@/app/context/CardContext';
 import { ICard } from '@/app/types/card';
 import React, { useContext } from 'react';
+import { toast } from 'react-toastify';
 
 const Myplan = ({ card }: { card: ICard }) => {
+  const { addToMyPlan } = useContext(CardContext);
 
-    const { myPlan, setMyPlan } = useContext(CardContext)
-
-
-
-    const handelMyplanBtn = () => {
-        console.log("Card Tragerd", card);
-
-
-        setMyPlan([...myPlan, card]);
-        alert(`you have read card"${card.name}"`)
+  const handleMyPlanBtn = () => {
+    const isAdded = addToMyPlan(card);
+    if (isAdded) {
+      toast.success(`"${card.name}" saved for later!`);
+    } else {
+      toast.info(`"${card.name}" is already saved!`);
     }
+  };
 
-    return (
-        <button
-            type="button"
-            className="rounded-lg bg-lime-400 px-5 py-3 text-xs font-bold text-black transition hover:bg-lime-300"
-            onClick={() => handelMyplanBtn()}>
-            <span className="mr-2 text-sm">⊞</span>
-            Save for later
-        </button>
-    );
+  return (
+    <button
+      type="button"
+      onClick={handleMyPlanBtn}
+      className="flex items-center gap-2 rounded-lg border border-white/20 bg-white/5 px-5 py-2.5 text-xs font-bold text-white transition hover:bg-white/10"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-4 w-4 text-gray-300"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2}
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+        />
+      </svg>
+      Save for later
+    </button>
+  );
 };
 
 export default Myplan;

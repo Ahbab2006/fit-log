@@ -1,209 +1,161 @@
-import Myplan from '@/app/components/cardDetails/myplan';
+import Myplan from '@/app/components/cardDetails/Myplan';
 import TodayBtn from '@/app/components/cardDetails/TodayBtn';
 import { ICard } from '@/app/types/card';
 import Image from 'next/image';
+import { notFound } from 'next/navigation';
 import React from 'react';
 
 interface ICardDetailsPageProps {
-    params: Promise<{
-        id: string
-    }>;
+  params: Promise<{
+    id: string;
+  }>;
 }
 
-
-
-const getCard = async () => {
-    const response = await fetch("https://api.abcz.workers.dev/api/fitlog");
+const getCards = async (): Promise<ICard[]> => {
+  try {
+    const response = await fetch("https://api.abcz.workers.dev/api/fitlog", {
+      next: { revalidate: 3600 },
+    });
+    if (!response.ok) return [];
     const data = await response.json();
-    return data;
+    return Array.isArray(data)
+      ? data
+      : Array.isArray(data?.data)
+      ? data.data
+      : Array.isArray(data?.workouts)
+      ? data.workouts
+      : [];
+  } catch (error) {
+    console.error("Fetch card error:", error);
+    return [];
+  }
 };
 
-
 const CardDetailsPage = async ({ params }: ICardDetailsPageProps) => {
+  const { id } = await params;
+  const cards = await getCards();
+  const card = cards.find((c) => String(c.id) === String(id));
 
-    const { id } = await params;
+  if (!card) {
+    notFound();
+  }
 
-    const cardsData = await getCard();
-    const card = cardsData.find((card: ICard) => String(card.id) === String(id)) as ICard;
+  return (
+    <main className="min-h-screen bg-[#0d0f12] px-4 py-8 text-white md:px-8">
+      <div className="mx-auto max-w-6xl">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 items-start">
+          
+          {/* Left: Image Container */}
+          <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-[#151820] border border-white/5 shadow-2xl">
+            <Image
+              src={card.image}
+              alt={card.name}
+              fill
+              priority
+              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 50vw"
+            />
+          </div>
 
- return (
-    <div className="min-h-screen bg-[#0d0f12] px-4 py-8 text-white md:px-6">
-        <div className="mx-auto w-full max-w-6xl overflow-hidden rounded-2xl border border-white/5 bg-[#0d0f12]">
+          {/* Right: Content Details */}
+          <div className="flex flex-col">
+            
+            {/* Title */}
+            <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tight text-white">
+              {card.name}
+            </h1>
 
-            <div className="grid grid-cols-1 gap-8 p-4 md:p-6 lg:grid-cols-[380px_minmax(0,1fr)]">
+            {/* Description */}
+            <p className="mt-2 text-sm leading-6 text-gray-400">
+              {card.description}
+            </p>
 
-                {/* ================= IMAGE ================= */}
-                <figure className="relative h-[400px] overflow-hidden rounded-xl md:h-[430px]">
-                    <Image
-                        src={card.image}
-                        alt={card.name}
-                        fill
-                        priority
-                        className="object-cover"
-                        sizes="(max-width: 1024px) 100vw, 380px"
-                    />
-                </figure>
-
-
-                {/* ================= CONTENT ================= */}
-                <div className="min-w-0">
-
-                    {/* Title */}
-                    <div>
-                        <h1 className="text-3xl font-extrabold uppercase tracking-tight text-white">
-                            {card.name}
-                        </h1>
-
-                        <p className="mt-2 text-sm leading-6 text-gray-400">
-                            {card.description}
-                        </p>
-
-                        {/* Muscle Groups */}
-                        <div className="mt-4 flex flex-wrap gap-2">
-                            {card.muscleGroups.map((muscle) => (
-                                <span
-                                    key={muscle}
-                                    className="rounded-full bg-lime-400 px-3 py-1 text-[10px] font-bold uppercase text-black"
-                                >
-                                    {muscle}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-
-
-                    {/* ================= STATS ================= */}
-                    <div className="mt-6 overflow-hidden rounded-xl border border-white/5 bg-[#12151a]">
-
-                        {/* Equipment */}
-                        <div className="flex items-center justify-between border-b border-white/5 px-4 py-3">
-                            <span className="text-[10px] font-semibold tracking-wider text-gray-500">
-                                EQUIPMENT
-                            </span>
-
-                            <span className="text-xs font-medium text-gray-300">
-                                {card.equipment}
-                            </span>
-                        </div>
-
-
-                        {/* Difficulty */}
-                        <div className="flex items-center justify-between border-b border-white/5 px-4 py-3">
-                            <span className="text-[10px] font-semibold tracking-wider text-gray-500">
-                                DIFFICULTY
-                            </span>
-
-                            <span className="text-xs font-medium text-gray-300">
-                                {card.difficulty}
-                            </span>
-                        </div>
-
-
-                        {/* Sets */}
-                        <div className="flex items-center justify-between border-b border-white/5 px-4 py-3">
-                            <span className="text-[10px] font-semibold tracking-wider text-gray-500">
-                                SETS
-                            </span>
-
-                            <span className="text-xs font-medium text-gray-300">
-                                {card.sets}
-                            </span>
-                        </div>
-
-
-                        {/* Reps */}
-                        <div className="flex items-center justify-between border-b border-white/5 px-4 py-3">
-                            <span className="text-[10px] font-semibold tracking-wider text-gray-500">
-                                REPS
-                            </span>
-
-                            <span className="text-xs font-medium text-gray-300">
-                                {card.reps}
-                            </span>
-                        </div>
-
-
-                        {/* Duration */}
-                        <div className="flex items-center justify-between border-b border-white/5 px-4 py-3">
-                            <span className="text-[10px] font-semibold tracking-wider text-gray-500">
-                                DURATION
-                            </span>
-
-                            <span className="text-xs font-medium text-gray-300">
-                                {card.duration} min
-                            </span>
-                        </div>
-
-
-                        {/* Calories */}
-                        <div className="flex items-center justify-between border-b border-white/5 px-4 py-3">
-                            <span className="text-[10px] font-semibold tracking-wider text-gray-500">
-                                CALORIES
-                            </span>
-
-                            <span className="text-xs font-medium text-gray-300">
-                                {card.caloriesBurned} kcal
-                            </span>
-                        </div>
-
-
-                        {/* Rating */}
-                        <div className="flex items-center justify-between px-4 py-3">
-                            <span className="text-[10px] font-semibold tracking-wider text-gray-500">
-                                RATING
-                            </span>
-
-                            <span className="text-sm font-semibold text-gray-200">
-                                ⭐ {card.rating}
-                            </span>
-                        </div>
-
-                    </div>
-
-
-                    {/* ================= INSTRUCTIONS ================= */}
-                    <div className="mt-6">
-
-                        <h2 className="mb-4 text-sm font-extrabold uppercase tracking-wider text-white">
-                            Instructions
-                        </h2>
-
-                        <div className="space-y-3">
-                            {card.instructions.map((instruction, index) => (
-                                <div
-                                    key={index}
-                                    className="flex items-start gap-3"
-                                >
-                                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#1b1f25] text-[10px] font-semibold text-gray-400">
-                                        {index + 1}
-                                    </span>
-
-                                    <p className="text-xs leading-5 text-gray-400">
-                                        {instruction}
-                                    </p>
-                                </div>
-                            ))}
-                        </div>
-
-                    </div>
-
-
-                    {/* ================= BUTTONS ================= */}
-                    <div className="mt-7 flex flex-wrap gap-3">
-
-                        <TodayBtn card={card}/>
-
-                       <Myplan card={card}/>
-
-                    </div>
-
-                </div>
+            {/* Muscle Group Badges */}
+            <div className="mt-3 flex flex-wrap gap-2">
+              {card.muscleGroups?.map((muscle) => (
+                <span
+                  key={muscle}
+                  className="rounded-full bg-[#baff00] px-3 py-1 text-[11px] font-bold uppercase text-black"
+                >
+                  {muscle}
+                </span>
+              ))}
             </div>
+
+            {/* Specifications Card Table */}
+            <div className="mt-6 divide-y divide-white/5 rounded-xl border border-white/5 bg-[#14171f]">
+              <div className="flex items-center justify-between px-4 py-2.5 text-xs">
+                <span className="font-semibold uppercase tracking-wider text-gray-400">
+                  Equipment
+                </span>
+                <span className="font-medium text-gray-200">{card.equipment}</span>
+              </div>
+              <div className="flex items-center justify-between px-4 py-2.5 text-xs">
+                <span className="font-semibold uppercase tracking-wider text-gray-400">
+                  Difficulty
+                </span>
+                <span className="font-medium text-gray-200">{card.difficulty}</span>
+              </div>
+              <div className="flex items-center justify-between px-4 py-2.5 text-xs">
+                <span className="font-semibold uppercase tracking-wider text-gray-400">
+                  Sets
+                </span>
+                <span className="font-medium text-gray-200">{card.sets}</span>
+              </div>
+              <div className="flex items-center justify-between px-4 py-2.5 text-xs">
+                <span className="font-semibold uppercase tracking-wider text-gray-400">
+                  Reps
+                </span>
+                <span className="font-medium text-gray-200">{card.reps}</span>
+              </div>
+              <div className="flex items-center justify-between px-4 py-2.5 text-xs">
+                <span className="font-semibold uppercase tracking-wider text-gray-400">
+                  Duration
+                </span>
+                <span className="font-medium text-gray-200">{card.duration} min</span>
+              </div>
+              <div className="flex items-center justify-between px-4 py-2.5 text-xs">
+                <span className="font-semibold uppercase tracking-wider text-gray-400">
+                  Calories
+                </span>
+                <span className="font-medium text-gray-200">{card.caloriesBurned} kcal</span>
+              </div>
+              <div className="flex items-center justify-between px-4 py-2.5 text-xs">
+                <span className="font-semibold uppercase tracking-wider text-gray-400">
+                  Rating
+                </span>
+                <span className="font-semibold text-gray-200">{card.rating}</span>
+              </div>
+            </div>
+
+            {/* Instructions */}
+            {card.instructions && card.instructions.length > 0 && (
+              <div className="mt-6">
+                <h3 className="text-xs font-black uppercase tracking-wider text-white">
+                  Instructions
+                </h3>
+                <ol className="mt-3 space-y-2 text-xs leading-relaxed text-gray-400">
+                  {card.instructions.map((inst, index) => (
+                    <li key={index} className="flex gap-2">
+                      <span className="text-gray-500 font-semibold">{index + 1}.</span>
+                      <span>{inst}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="mt-7 flex flex-wrap gap-3">
+              <TodayBtn card={card} />
+              <Myplan card={card} />
+            </div>
+
+          </div>
         </div>
-    </div>
-);
-
-
+      </div>
+    </main>
+  );
 };
 
 export default CardDetailsPage;

@@ -3,30 +3,43 @@
 import { CardContext } from '@/app/context/CardContext';
 import { ICard } from '@/app/types/card';
 import React, { useContext } from 'react';
+import { toast } from 'react-toastify';
 
 const TodayBtn = ({ card }: { card: ICard }) => {
+  const { addToTodayPlan } = useContext(CardContext);
 
-    const { workouts, setWorkouts } = useContext(CardContext)
-
-
-
-    const handelTodayBtn = () => {
-        console.log("Card Tragerd", card);
-
-
-        setWorkouts([...workouts, card]);
-        alert(`you have read card"${card.name}"`)
+  const handleTodayBtn = () => {
+    const isAdded = addToTodayPlan(card);
+    if (isAdded) {
+      toast.success(`"${card.name}" added to today's plan!`);
+    } else {
+      toast.info(`"${card.name}" is already in today's plan!`);
     }
+  };
 
-    return (
-        <button
-            type="button"
-            className="rounded-lg bg-lime-400 px-5 py-3 text-xs font-bold text-black transition hover:bg-lime-300"
-            onClick={() => handelTodayBtn()}>
-            <span className="mr-2 text-sm">⊞</span>
-            Add to today&apos;s plan
-        </button>
-    );
+  return (
+    <button
+      type="button"
+      onClick={handleTodayBtn}
+      className="flex items-center gap-2 rounded-lg bg-[#baff00] px-5 py-2.5 text-xs font-bold text-black transition hover:bg-[#cbfb2d]"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-4 w-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2}
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+        />
+      </svg>
+      Add to today&apos;s plan
+    </button>
+  );
 };
 
 export default TodayBtn;
