@@ -2,6 +2,8 @@
 
 FitLog is a modern, dark-themed fitness companion web app built with Next.js and Tailwind CSS. It helps gym enthusiasts explore workouts, log daily training plans, and track progress effortlessly.
 
+🔗 **Live Demo:** [https://fit-log-eight-phi.vercel.app/](https://fit-log-eight-phi.vercel.app)
+
 ---
 
 ## ✨ Features
@@ -20,7 +22,7 @@ FitLog is a modern, dark-themed fitness companion web app built with Next.js and
 - **Framework:** Next.js (App Router)
 - **Styling:** Tailwind CSS
 - **State Management:** React Context API
-- **Icons & Notification:** React Toastify
+- **Deployment:** Vercel
 
 ---
 
