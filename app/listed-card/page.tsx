@@ -19,7 +19,6 @@ const ListedCardContent = () => {
   const [activeTab, setActiveTab] = useState<"today" | "saved">("today");
   const [sortBy, setSortBy] = useState<SortOption>("duration");
 
-  // Completed workouts track korar jonno state
   const [completedIds, setCompletedIds] = useState<number[]>([]);
 
   useEffect(() => {
@@ -76,7 +75,6 @@ const ListedCardContent = () => {
           Cap of five lifts for today. Finish them, then load more.
         </p>
 
-        {/* Stats Row */}
         <div className="grid grid-cols-3 gap-3 rounded-2xl border border-white/5 bg-[#12141a] p-6 text-center">
           <div>
             <p className="text-3xl font-black text-[#baff00] md:text-4xl">
@@ -103,8 +101,6 @@ const ListedCardContent = () => {
             </p>
           </div>
         </div>
-
-        {/* Tabs and Sort By */}
         <div className="mt-8 flex flex-col gap-4 border-b border-white/10 pb-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex gap-2">
             <button
@@ -140,8 +136,6 @@ const ListedCardContent = () => {
             </select>
           </div>
         </div>
-
-        {/* Workout List */}
         <div className="mt-6">
           {sortedList.length === 0 ? (
             <div className="flex flex-col items-center justify-center rounded-2xl border border-white/5 bg-[#12141a] py-20 text-center">
@@ -188,10 +182,8 @@ const ListedCardContent = () => {
                         </p>
                       </div>
                     </div>
-
-                    {/* Right: Actions (View Details, Mark as Done, Remove) */}
                     <div className="flex items-center gap-3">
-                      {/* View Details */}
+              
                       <Link
                         href={`/cards/${card.id}`}
                         className="rounded-full border border-white/10 bg-[#161922] px-4 py-2 text-xs font-medium text-gray-200 transition hover:bg-white/10 hover:text-white"
@@ -199,7 +191,6 @@ const ListedCardContent = () => {
                         View Details
                       </Link>
 
-                      {/* Mark as Done */}
                       <button
                         type="button"
                         onClick={() => handleMarkAsDone(card.id, card.name)}
@@ -223,7 +214,6 @@ const ListedCardContent = () => {
                         {isDone ? "Completed" : "Mark as Done"}
                       </button>
 
-                      {/* Remove (Cross Icon) */}
                       <button
                         type="button"
                         onClick={() => {
