@@ -1,20 +1,14 @@
-import Myplan from '@/app/components/cardDetails/Myplan';
-import TodayBtn from '@/app/components/cardDetails/TodayBtn';
-import { ICard } from '@/app/types/card';
-import Image from 'next/image';
-import { notFound } from 'next/navigation';
-import React from 'react';
+import Myplan from "@/app/components/cardDetails/Myplan";
+import TodayBtn from "@/app/components/cardDetails/TodayBtn";
+import { ICard } from "@/app/types/card";
+import Image from "next/image";
+import React from "react";
 
-interface ICardDetailsPageProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
-
+// API Fetch Function
 const getCards = async (): Promise<ICard[]> => {
   try {
     const response = await fetch("https://api.abcz.workers.dev/api/fitlog", {
-      next: { revalidate: 3600 },
+      cache: "no-store", // dynamic cache disabled
     });
     if (!response.ok) return [];
     const data = await response.json();
@@ -26,27 +20,44 @@ const getCards = async (): Promise<ICard[]> => {
       ? data.workouts
       : [];
   } catch (error) {
-    console.error("Fetch card error:", error);
+    console.error("API error:", error);
     return [];
   }
 };
 
-const CardDetailsPage = async ({ params }: ICardDetailsPageProps) => {
-  const { id } = await params;
-  const cards = await getCards();
-  const card = cards.find((c) => String(c.id) === String(id));
+const CardDetailsPage = async ({
+  params,
+}: {
+  params: Promise<{ id: string }> | { id: string };
+}) => {
+  // Params resolve kora (Next.js 14 & 15 duto-tei kaj korbe)
+  const resolvedParams = await params;
+  const cardId = resolvedParams?.id;
 
+  const cardsData = await getCards();
+
+  // Trim ebong String convert kore safe match
+  const card = cardsData.find(
+    (c) => String(c.id).trim() === String(cardId).trim()
+  );
+
+  // Card na pele jeno crash/blank 404 na hoye message dekhay
   if (!card) {
-    notFound();
+    return (
+      <div className="min-h-screen bg-[#0d0f12] p-10 text-center text-white">
+        <h2 className="text-2xl font-bold">Card Not Found for ID: {cardId}</h2>
+        <p className="mt-2 text-gray-400">Total cards fetched: {cardsData.length}</p>
+      </div>
+    );
   }
 
   return (
     <main className="min-h-screen bg-[#0d0f12] px-4 py-8 text-white md:px-8">
       <div className="mx-auto max-w-6xl">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 items-start">
+        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-2">
           
-          {/* Left: Image Container */}
-          <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-[#151820] border border-white/5 shadow-2xl">
+          {/* IMAGE */}
+          <div className="relative aspect-square w-full overflow-hidden rounded-2xl border border-white/5 bg-[#151820]">
             <Image
               src={card.image}
               alt={card.name}
@@ -57,20 +68,17 @@ const CardDetailsPage = async ({ params }: ICardDetailsPageProps) => {
             />
           </div>
 
-          {/* Right: Content Details */}
+          {/* DETAILS CONTENT */}
           <div className="flex flex-col">
-            
-            {/* Title */}
-            <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tight text-white">
+            <h1 className="text-3xl font-black uppercase tracking-tight text-white md:text-4xl">
               {card.name}
             </h1>
 
-            {/* Description */}
             <p className="mt-2 text-sm leading-6 text-gray-400">
               {card.description}
             </p>
 
-            {/* Muscle Group Badges */}
+            {/* MUSCLE GROUPS */}
             <div className="mt-3 flex flex-wrap gap-2">
               {card.muscleGroups?.map((muscle) => (
                 <span
@@ -82,62 +90,46 @@ const CardDetailsPage = async ({ params }: ICardDetailsPageProps) => {
               ))}
             </div>
 
-            {/* Specifications Card Table */}
+            {/* STATS TABLE */}
             <div className="mt-6 divide-y divide-white/5 rounded-xl border border-white/5 bg-[#14171f]">
               <div className="flex items-center justify-between px-4 py-2.5 text-xs">
-                <span className="font-semibold uppercase tracking-wider text-gray-400">
-                  Equipment
-                </span>
+                <span className="font-semibold uppercase tracking-wider text-gray-400">Equipment</span>
                 <span className="font-medium text-gray-200">{card.equipment}</span>
               </div>
               <div className="flex items-center justify-between px-4 py-2.5 text-xs">
-                <span className="font-semibold uppercase tracking-wider text-gray-400">
-                  Difficulty
-                </span>
+                <span className="font-semibold uppercase tracking-wider text-gray-400">Difficulty</span>
                 <span className="font-medium text-gray-200">{card.difficulty}</span>
               </div>
               <div className="flex items-center justify-between px-4 py-2.5 text-xs">
-                <span className="font-semibold uppercase tracking-wider text-gray-400">
-                  Sets
-                </span>
+                <span className="font-semibold uppercase tracking-wider text-gray-400">Sets</span>
                 <span className="font-medium text-gray-200">{card.sets}</span>
               </div>
               <div className="flex items-center justify-between px-4 py-2.5 text-xs">
-                <span className="font-semibold uppercase tracking-wider text-gray-400">
-                  Reps
-                </span>
+                <span className="font-semibold uppercase tracking-wider text-gray-400">Reps</span>
                 <span className="font-medium text-gray-200">{card.reps}</span>
               </div>
               <div className="flex items-center justify-between px-4 py-2.5 text-xs">
-                <span className="font-semibold uppercase tracking-wider text-gray-400">
-                  Duration
-                </span>
+                <span className="font-semibold uppercase tracking-wider text-gray-400">Duration</span>
                 <span className="font-medium text-gray-200">{card.duration} min</span>
               </div>
               <div className="flex items-center justify-between px-4 py-2.5 text-xs">
-                <span className="font-semibold uppercase tracking-wider text-gray-400">
-                  Calories
-                </span>
+                <span className="font-semibold uppercase tracking-wider text-gray-400">Calories</span>
                 <span className="font-medium text-gray-200">{card.caloriesBurned} kcal</span>
               </div>
               <div className="flex items-center justify-between px-4 py-2.5 text-xs">
-                <span className="font-semibold uppercase tracking-wider text-gray-400">
-                  Rating
-                </span>
+                <span className="font-semibold uppercase tracking-wider text-gray-400">Rating</span>
                 <span className="font-semibold text-gray-200">{card.rating}</span>
               </div>
             </div>
 
-            {/* Instructions */}
+            {/* INSTRUCTIONS */}
             {card.instructions && card.instructions.length > 0 && (
               <div className="mt-6">
-                <h3 className="text-xs font-black uppercase tracking-wider text-white">
-                  Instructions
-                </h3>
+                <h3 className="text-xs font-black uppercase tracking-wider text-white">Instructions</h3>
                 <ol className="mt-3 space-y-2 text-xs leading-relaxed text-gray-400">
                   {card.instructions.map((inst, index) => (
                     <li key={index} className="flex gap-2">
-                      <span className="text-gray-500 font-semibold">{index + 1}.</span>
+                      <span className="font-semibold text-gray-500">{index + 1}.</span>
                       <span>{inst}</span>
                     </li>
                   ))}
@@ -145,13 +137,13 @@ const CardDetailsPage = async ({ params }: ICardDetailsPageProps) => {
               </div>
             )}
 
-            {/* Action Buttons */}
+            {/* BUTTONS */}
             <div className="mt-7 flex flex-wrap gap-3">
               <TodayBtn card={card} />
               <Myplan card={card} />
             </div>
-
           </div>
+
         </div>
       </div>
     </main>
