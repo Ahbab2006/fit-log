@@ -5,6 +5,7 @@ import { CardContext } from "@/app/context/CardContext";
 import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
+import { toast } from "react-toastify";
 
 type SortOption = "duration" | "calories" | "rating";
 
@@ -94,21 +95,19 @@ const ListedCardContent = () => {
           <div className="flex gap-2">
             <button
               onClick={() => setActiveTab("today")}
-              className={`rounded-lg px-4 py-2 text-xs font-bold transition ${
-                activeTab === "today"
+              className={`rounded-lg px-4 py-2 text-xs font-bold transition ${activeTab === "today"
                   ? "bg-[#baff00] text-black"
                   : "bg-transparent text-gray-400 hover:text-white"
-              }`}
+                }`}
             >
               Today&apos;s Plan ({todayPlan.length})
             </button>
             <button
               onClick={() => setActiveTab("saved")}
-              className={`rounded-lg px-4 py-2 text-xs font-bold transition ${
-                activeTab === "saved"
+              className={`rounded-lg px-4 py-2 text-xs font-bold transition ${activeTab === "saved"
                   ? "bg-[#baff00] text-black"
                   : "bg-transparent text-gray-400 hover:text-white"
-              }`}
+                }`}
             >
               Saved ({myPlan.length})
             </button>
@@ -143,7 +142,7 @@ const ListedCardContent = () => {
                 href="/"
                 className="mt-5 rounded-md bg-[#baff00] px-6 py-2.5 text-xs font-black uppercase text-black transition hover:bg-[#cbfb2d]"
               >
-                BROWSE WORKOUTS
+                Go to workouts
               </Link>
             </div>
           ) : (
@@ -183,12 +182,15 @@ const ListedCardContent = () => {
 
                     {/* Remove Button */}
                     <button
-                      onClick={() =>
-                        activeTab === "today"
-                          ? removeFromTodayPlan(card.id)
-                          : removeFromMyPlan(card.id)
-                      }
-                      className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-1.5 text-xs font-semibold text-red-400 transition hover:bg-red-500/20"
+                      onClick={() => {
+                        if (activeTab === "today") {
+                          removeFromTodayPlan(card.id);
+                        } else {
+                          removeFromMyPlan(card.id);
+                        }
+                        toast.success("Remove Successful");
+                      }}
+                      className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-1.5 text-xs font-semibold text-red-400 transition hover:bg-red-500/20 active:scale-95"
                     >
                       Remove
                     </button>
