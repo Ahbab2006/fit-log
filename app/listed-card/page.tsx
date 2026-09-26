@@ -19,6 +19,9 @@ const ListedCardContent = () => {
   const [activeTab, setActiveTab] = useState<"today" | "saved">("today");
   const [sortBy, setSortBy] = useState<SortOption>("duration");
 
+  // Completed workouts track korar jonno state
+  const [completedIds, setCompletedIds] = useState<number[]>([]);
+
   useEffect(() => {
     if (tabParam === "saved") {
       setActiveTab("saved");
@@ -53,13 +56,27 @@ const ListedCardContent = () => {
     return list;
   }, [currentRawList, sortBy]);
 
+  const handleMarkAsDone = (cardId: number, cardName: string) => {
+    if (completedIds.includes(cardId)) {
+      setCompletedIds((prev) => prev.filter((id) => id !== cardId));
+      toast.info(`"${cardName}" marked as pending`);
+    } else {
+      setCompletedIds((prev) => [...prev, cardId]);
+      toast.success(`"${cardName}" marked as done! Great job! 💪`);
+    }
+  };
+
   return (
     <main className="min-h-screen bg-[#0b0c0f] px-4 py-8 text-white md:px-8">
       <div className="mx-auto max-w-6xl">
         <h1 className="mb-6 text-xl font-black uppercase tracking-wider text-white">
           MY PLAN
         </h1>
+        <p className="mt-1 text-xs text-gray-400 sm:text-sm">
+          Cap of five lifts for today. Finish them, then load more.
+        </p>
 
+        {/* Stats Row */}
         <div className="grid grid-cols-3 gap-3 rounded-2xl border border-white/5 bg-[#12141a] p-6 text-center">
           <div>
             <p className="text-3xl font-black text-[#baff00] md:text-4xl">
@@ -87,6 +104,7 @@ const ListedCardContent = () => {
           </div>
         </div>
 
+        {/* Tabs and Sort By */}
         <div className="mt-8 flex flex-col gap-4 border-b border-white/10 pb-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex gap-2">
             <button
@@ -123,6 +141,7 @@ const ListedCardContent = () => {
           </div>
         </div>
 
+        {/* Workout List */}
         <div className="mt-6">
           {sortedList.length === 0 ? (
             <div className="flex flex-col items-center justify-center rounded-2xl border border-white/5 bg-[#12141a] py-20 text-center">
@@ -141,56 +160,102 @@ const ListedCardContent = () => {
             </div>
           ) : (
             <div className="space-y-3">
-              {sortedList.map((card) => (
-                <div
-                  key={card.id}
-                  className="flex flex-col gap-4 rounded-xl border border-white/5 bg-[#12141a] p-4 transition hover:border-white/15 sm:flex-row sm:items-center sm:justify-between"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="relative h-16 w-20 shrink-0 overflow-hidden rounded-lg bg-black">
-                      <Image
-                        src={card.image}
-                        alt={card.name}
-                        fill
-                        className="object-cover"
-                      />
+              {sortedList.map((card) => {
+                const isDone = completedIds.includes(card.id);
+
+                return (
+                  <div
+                    key={card.id}
+                    className={`flex flex-col gap-4 rounded-xl border border-white/5 bg-[#12141a] p-4 transition hover:border-white/15 sm:flex-row sm:items-center sm:justify-between ${isDone ? "opacity-60" : ""
+                      }`}
+                  >
+                    {/* Left: Image & Info */}
+                    <div className="flex items-center gap-4">
+                      <div className="relative h-16 w-20 shrink-0 overflow-hidden rounded-lg bg-black">
+                        <Image
+                          src={card.image}
+                          alt={card.name}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <div>
+                        <h3 className={`text-sm font-bold uppercase text-white ${isDone ? "line-through text-gray-400" : ""}`}>
+                          {card.name}
+                        </h3>
+                        <p className="mt-1 text-xs text-gray-400">
+                          {card.duration} min · {card.caloriesBurned} kcal · ⭐ {card.rating}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-sm font-bold uppercase text-white">
-                        {card.name}
-                      </h3>
-                      <p className="mt-1 text-xs text-gray-400">
-                        {card.duration} min · {card.caloriesBurned} kcal · ⭐ {card.rating}
-                      </p>
+
+                    {/* Right: Actions (View Details, Mark as Done, Remove) */}
+                    <div className="flex items-center gap-3">
+                      {/* View Details */}
+                      <Link
+                        href={`/cards/${card.id}`}
+                        className="rounded-full border border-white/10 bg-[#161922] px-4 py-2 text-xs font-medium text-gray-200 transition hover:bg-white/10 hover:text-white"
+                      >
+                        View Details
+                      </Link>
+
+                      {/* Mark as Done */}
+                      <button
+                        type="button"
+                        onClick={() => handleMarkAsDone(card.id, card.name)}
+                        className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold transition active:scale-95 ${isDone
+                            ? "bg-zinc-800 text-gray-400 border border-white/10"
+                            : "bg-[#baff00] text-black hover:bg-[#c8ff33]"
+                          }`}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-3.5 w-3.5"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        {isDone ? "Completed" : "Mark as Done"}
+                      </button>
+
+                      {/* Remove (Cross Icon) */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (activeTab === "today") {
+                            removeFromTodayPlan(card.id);
+                          } else {
+                            removeFromMyPlan(card.id);
+                          }
+                          toast.success("Remove Successful");
+                        }}
+                        className="p-1 text-gray-500 transition hover:text-gray-300"
+                        title="Remove"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
                     </div>
                   </div>
-
-                  <div className="flex items-center gap-3">
-                   
-                    <Link
-                      href={`/cards/${card.id}`}
-                      className="rounded-lg bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-white transition hover:bg-white/20"
-                    >
-                      View Details
-                    </Link>
-
-                  
-                    <button
-                      onClick={() => {
-                        if (activeTab === "today") {
-                          removeFromTodayPlan(card.id);
-                        } else {
-                          removeFromMyPlan(card.id);
-                        }
-                        toast.success("Remove Successful");
-                      }}
-                      className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-1.5 text-xs font-semibold text-red-400 transition hover:bg-red-500/20 active:scale-95"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
@@ -201,7 +266,13 @@ const ListedCardContent = () => {
 
 export default function ListedCardPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#0b0c0f] p-10 text-center text-gray-400">Loading...</div>}>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#0b0c0f] p-10 text-center text-gray-400">
+          Loading...
+        </div>
+      }
+    >
       <ListedCardContent />
     </Suspense>
   );
